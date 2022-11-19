@@ -6,7 +6,7 @@ Developed on a Raspberry Pi.  May run in other environments that support Python,
 
 *** NOTE *** 
 
-This program currently supports the followign YoLink device types.  Other devices may or may not display
+This program currently supports the following YoLink device types.  Other devices may or may not display
 correctly.  Please contact the program developer if you have other devices which you would like to have
 added:
 
