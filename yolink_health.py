@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 Filename= "yolink_health.py"
-Version = "1.63"
+Version = "1.65"
 
 # Version 1.25: Converted CURL to in-line commands
 # Version 1.28: Add logging
@@ -24,6 +24,9 @@ Version = "1.63"
 # Version 1.61: Pad the displayed update values to maintain alignment for up to 999 hours
 # Version 1.62: Clean up startup displays
 # Version 1.63: Add 'mid_battery' level to cause display to show in yellow, no alert
+# Version 1.64: Add test for existence of configuration file at program startup
+# Version 1.65: Add display of invalid entry in configuration file
+
 import json
 import time
 import datetime
@@ -33,6 +36,7 @@ import paho.mqtt.client as mqtt
 import requests
 from requests.structures import CaseInsensitiveDict
 import os
+import os.path
 
 # Name of file containing configuration information
 config_file='yolink_health.cfg'
@@ -204,6 +208,9 @@ def get_config_string(vname):
     except:
        valid_config_file = False
 
+    if found == False:
+       print('Unable to locate entry for key "%s" in "%s" configuration file.\n' % (vname,config_file))
+
     return vname_value
 
 # Function to search configuration/state file for a specific variable which must have True or False value
@@ -219,6 +226,8 @@ def get_config_truefalse(vname):
             result = False
         else:
             valid_config_file = False
+            print('Invalid True/False setting for key "%s" in "%s" configuration file.\n' % (vname,config_file))
+
     return result
 
 # Function to search configuration file for a specific variable which must convert to an integer
@@ -233,6 +242,8 @@ def get_config_integer(vname):
        except:
           result = ''
           valid_config_file = False
+          print('Invalid integer value for key "%s" in "%s" configuration file.\n' % (vname,config_file))
+
     return result
 
 # Function to search configuration file for a specific variable which must convert to a list
@@ -247,6 +258,8 @@ def get_config_list(vname):
        except:
           result = []
           valid_config_file = False
+          print('Invalid list entry for key "%s" in "%s" configuration file.\n' % (vname,config_file))
+
     return result
 
 
@@ -1142,20 +1155,25 @@ current_dow=9
 file_dirty=False
 
 print("\033c\n%s Program start: %s Version %s\n" % (timestamp(),Filename, Version))
-read_config_variables()
-post("\n%s\nProgram %s Version %s startup\n%s" % ('='*50, Filename, Version, '='*50))
 
-if valid_config_file == False:
-   print('Missing or invalid configuration file "%s".  Program unable to continue.\n' % config_file)
+if os.path.exists(config_file):
+   read_config_variables()
+   if valid_config_file:
+      post("\n%s\nProgram %s Version %s startup\n%s" % ('='*50, Filename, Version, '='*50))
+   else:
+      print('Invalid configuration file "%s".  Program unable to continue.\n' % config_file)
 
 else:
+   valid_config_file = False
+   print('Missing configuraton file "%s".\n' % config_file)
+   print('Obtain a copy of "yolink_health_template.cfg", edit it for your environment,')
+   print('then save it as "%s" in the same folder as the main "yolink_health.py" program.' % config_file)
+   print('\nExiting program\n')
+
+if valid_config_file:
    build_allowed_events_table()
    build_excluded_events_table()
    load_table()
-   ####^^^^display_table()
-   ####^^^check_status()
-   
-   ###^^^current_dow = get_dow()
 
    while True:
       # ------------------------------------------------------------------------
