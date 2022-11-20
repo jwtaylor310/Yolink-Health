@@ -34,9 +34,6 @@ Setup:
    4. This program uses the paho-MQTT library.  If you have not done so previously, you will need to install the library on your Pi.  To do so, 
       open a terminal window and enter the command "pip install paho-mqttt".
       
-    4. This program uses the paho-MQTT library.  If you have not done so previously, you will need to install  it on your Pi.  To do 
-       so, open a termnal window and enter the command "pip install paho-mqtt".  
-     
 Running the program:
    Open a terminal session on the Raspberry Pi.  Navigate to the folder where you have installed the "yolink_health.py" and "yolink_health.cfg" files.
    Start the program with the command: "python yolink_health.py".  (Some Pi's may require specifying "python3" instead of just "python").  The program
