@@ -31,8 +31,8 @@ Setup:
       "send_status_emails=True" and provide valid information for the email address list, server, account name and account password.  The other
       values in the configuration file typically do not need to be changed.
       
-    4. This program uses the paho-MQTT library.  If you have not done so previously, you will need to install  it on your Pi.  To do so, 
-       open a termnal window and enter the command "pip install paho-mqtt".  
+    4. This program uses the paho-MQTT library.  If you have not done so previously, you will need to install  it on your Pi.  To do 
+       so, open a termnal window and enter the command "pip install paho-mqtt".  
      
 Running the program:
    Open a terminal session on the Raspberry Pi.  Navigate to the folder where you have installed the "yolink_health.py" and "yolink_health.cfg" files.
