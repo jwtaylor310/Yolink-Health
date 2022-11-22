@@ -5,9 +5,7 @@ be configured to send an email alert if a device doesn't respond for an extended
 This program was developed on a Raspberry Pi.  It may run in other environments that support Python, but is has only been tested on Pi's.
 
 ### *** NOTE *** 
-This program currently supports the following YoLink device types.  Other devices may or may not be handled 
-correctly.  Please contact the program developer if you have other devices which you would like to have
-added:
+This program currently supports the following YoLink device types.  Other devices will be ignored.  Please contact the program developer if you have other devices which you would like to have added:
 
     Hubs
     Door Sensors
@@ -18,7 +16,7 @@ added:
     Leak Sensors
     YoLink Valves
 
-### Setup:t
+### Setup:
    1. Download a copy of the yolink_health files from github.  To do so, on the Pi that you will be using for the program, open a browser to https://github.com/jwtaylor310/Yolink-Health.git.  Click on the green 'Code' button at the top-right side of the page.  Then select 'Download ZIP'.  This will download a copy of the yolink_health files to your "home/pi/Downloads" folder.  Right-click on the downloaded zip file and select "extract here".  This will create a folder named "Yolink-Health-main" in the Downloads folder.  Open that folder and copy the "yolink_health.py" and "yolink_health_template.cfg" files to the folder you wish to use for the program (e.g., "home/pi/yolink_health").
   
    2. Obtain User Access Credentials for your YoLink account.  This is done by opening the YoLink app on a cell phone, then selecting the 
@@ -49,10 +47,11 @@ added:
    The program is intended to be run continuously. You may find it helpful to configure your Pi to run the program auotomatically at startup.
    
    Devices remain in the status table "forever".  If you take a YoLink device out of service you can remove it from the table manually.  To do so, stop
-   the program.  Then use a text editor to located the entry in the "yolink_health_table.txt" file and delete it.  Save the edited table and restart
+   the program.  Then use a text editor to locate the entry in the "yolink_health_table.txt" file and delete it.  Save the edited table and restart
    the program.  As an alternative, you may simply delete the "yolink_health_table.txt" file and the program will rebuild it from scratch with new data.
       
-   Status messages from devices that are not recognized by the program are saved in a file named "yolink_health_failed.log".  This file may be reviewed
-   to obtain the information needed to add previously unsupported devices to the program.
+   Status messages from devices that are not recognized by the program may be saved to a file named "yolink_health_failed.log".  This file may be reviewed
+   to obtain the information needed to add previously unsupported devices to the program.  This function may be enabled by editing the "yolink_health.cfg" 
+   file to set the entry "log_unsupported_messages" to "True".
    
    == End of README.md ==
