@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 Filename= "yolink_health.py"
-Version = "1.65"
+Version = "1.68"
 
 # Version 1.25: Converted CURL to in-line commands
 # Version 1.28: Add logging
@@ -26,7 +26,9 @@ Version = "1.65"
 # Version 1.63: Add 'mid_battery' level to cause display to show in yellow, no alert
 # Version 1.64: Add test for existence of configuration file at program startup
 # Version 1.65: Add display of invalid entry in configuration file
-
+# Version 1.66: Remove 'YL_on_disconnect' and 'YL_on_connectionlost' callbacks
+# Version 1.67: Add 'log_unsupported_messages' flag
+# Version 1.68: Add error trapping in get_device_status()
 import json
 import time
 import datetime
@@ -153,6 +155,7 @@ def read_config_variables():
     global SECRET_KEY
     global color_enabled
     global logging
+    global log_unsupported_messages
     global log_raw
     global verbose
     global mid_battery, min_battery, min_signal, max_age_minutes, max_alerts
@@ -167,6 +170,7 @@ def read_config_variables():
     if valid_config_file: SECRET_KEY=get_config_string('SECRET_KEY')
     if valid_config_file: color_enabled=get_config_truefalse('color_enabled')
     if valid_config_file: logging=get_config_truefalse('logging')
+    if valid_config_file: log_unsupported_messages=get_config_truefalse('log_unsupported_messages')
     if valid_config_file: log_raw=get_config_truefalse('log_raw')
     if valid_config_file: verbose=get_config_truefalse('verbose')
     if valid_config_file: mid_battery=get_config_integer('mid_battery')
@@ -344,8 +348,6 @@ def YL_establish_MQTT_connection():
    YL_client = mqtt.Client()
    YL_client.username_pw_set(username=YL_access_token)
    YL_client.on_connect = YL_on_connect
-   YL_client.on_disconnect = YL_on_disconnect
-   YL_client.onconnection_lost = YL_on_connectionlost
    YL_client.on_message = YL_on_message
    YL_client.connect(host=YL_mqttBroker, port=YL_port, keepalive=60)
    YL_client.reconnect_delay_set(min_delay=1, max_delay=120)
@@ -395,22 +397,10 @@ def YL_on_connect(YL_client, YL_username, YL_flags, YL_rc):
    return()
 
 #=============================================================================================
-# Function to be executed when a connection to the YoLink MQTT Broker is disconnected
-#=============================================================================================
-def YL_on_disconnect():
-   if first_time: post("MQTT Disconnected")
-   print_nl("\n%s >>> MQTT Disconnected <<<" % timestamp())
-   return()
-
-#=============================================================================================
-# Function to be executed when a connection to the YoLink MQTT Broker is lost
-#=============================================================================================
-def YL_on_connectionlost():
-   if first_time: post("MQTT Connection Lost")
-   print_nl("\n%s >>> MQTT Connection Lost <<<" % timestamp())
-   return()
-
+#
 # Read current "yolink_health_table.txt" file and used it to build device status dictionary
+#
+#=============================================================================================
 def load_table():
    global dev_status_dictionary
    dev_status_dictionary={}
@@ -484,8 +474,12 @@ def get_device_status(device_data):
    headers["Authorization"] = "Bearer "+ YL_access_token
 
    data = '{"method":"' + device_type + '.getState","targetDevice":"' + device_id + '","token":"' + device_token + '"}'
-   resp = requests.post(url, headers=headers, data=data)
-   device_data = resp.json()
+
+   try:
+      resp = requests.post(url, headers=headers, data=data)
+      device_data = resp.json()
+   except:
+      device_data = []
 
    if device_type == 'Hub':
       try:
@@ -864,12 +858,12 @@ def YL_on_message(YL_client, YL_userdata, YL_msg):
          else:
             # Not valid event
             print_nl("%s: Unsupported event: %s on %s" % (timestamp(),YL_event, YL_device_name))
-            fid = open("yolink_health_failed_log.txt","a")
-            fid.write(timestamp()+': '+YL_device_name+'  ')
-            fid.write(json.dumps(YL_payload))
-            fid.write("-"*50+"\n")
-            fid.close()
-
+            if log_unsupported_messages:
+               fid = open("yolink_health_failed_log.txt","a")
+               fid.write(timestamp()+': '+YL_device_name+'  ')
+               fid.write(json.dumps(YL_payload))
+               fid.write("-"*50+"\n")
+               fid.close()
       else:
          # Excluded event
          print_nl("%s: Excluded event: %s on %s" % (timestamp(),YL_event, YL_device_name))
