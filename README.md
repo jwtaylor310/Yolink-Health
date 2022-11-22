@@ -17,7 +17,7 @@ This program currently supports the following YoLink device types.  Other device
     YoLink Valves
 
 ### Setup:
-   1. Download a copy of the yolink_health files from github.  To do so, on the Pi that you will be using for the program, open a browser to https://github.com/jwtaylor310/Yolink_Health.git.  Click on the green 'Code' button at the top-right side of the page.  Then select 'Download ZIP'.  This will download a copy of the yolink_health files to your "home/pi/Downloads" folder.  Right-click on the downloaded zip file and select "extract here".  This will create a folder named "Yolink_Health-main" in the Downloads folder.  Open that folder and copy the "yolink_health.py" and "yolink_health_template.cfg" files to the folder you wish to use for the program (e.g., "home/pi/yolink_health").
+   1. Download a copy of the yolink_health files from github.  To do so, on the Pi that you will be using for the program, open a browser to https://github.com/jwtaylor310/Yolink_Health.  Click on the green 'Code' button at the top-right side of the page.  Then select 'Download ZIP'.  This will download a copy of the yolink_health files to your "home/pi/Downloads" folder.  Right-click on the downloaded zip file and select "extract here".  This will create a folder named "Yolink_Health-main" in the Downloads folder.  Open that folder and copy the "yolink_health.py" and "yolink_health_template.cfg" files to the folder you wish to use for the program (e.g., "home/pi/yolink_health").
   
    2. Obtain User Access Credentials for your YoLink account.  This is done by opening the YoLink app on a cell phone, then selecting the 
       'hamburger' icon at the top-left corner and navigating to Settings...Account...Advanced Settings...User Access Credentials.  Record
