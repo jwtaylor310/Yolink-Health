@@ -2,7 +2,7 @@
 This is a Python program that monitors the availability, battery level and signal strength of YoLink devices.  As an option, the program can
 be configured to send an email alert if a device doesn't respond for an extended period, has a low battery, or a weak signal.
 
-This program was developed on a Raspberry Pi.  It may run in other environments that support Python, but is has only been tested on Pi's.
+This program was developed and tested on a Raspberry Pi.  It has also been tested and runs successfully on a Windows 11 PC.
 
 ### *** NOTE *** 
 This program currently supports the following YoLink device types.  Other devices will be ignored.  Please contact the program developer if you have other devices which you would like to have added:
@@ -28,9 +28,15 @@ This program currently supports the following YoLink device types.  Other device
       "send_status_emails=True" and provide valid information for the email address list, server, account name and account password.  The other
       values in the configuration file typically do not need to be changed.
       
-   4. This program uses the paho-MQTT library.  If you have not done so previously, you will need to install that library on your Pi.  To do so, 
+   4. If you will be running the program under Windows, you will need to install Python if that hasn't been done previously.  It can be downloaded from the Microsoft store.
+   
+   5. This program uses the "paho-MQTT" library.  If you have not done so previously, you will need to install that library on your Pi.  To do so, 
       open a terminal window and enter the command "pip install paho-mqttt".
       
+    6. This program uses the "request" library.  That library is normally included in the distribution version of the Raspberry Pi
+       operating system.  It is not normally included in Windows.  To install in either environment, enter the command
+       "python -m pip install requests".
+        
 ### Running the program:
    Open a terminal session on the Raspberry Pi.  Navigate to the folder where you have installed the "yolink_health.py" and "yolink_health.cfg" files.
    Start the program with the command: "python yolink_health.py".  (Some Pi's may require specifying "python3" instead of just "python").  The program
